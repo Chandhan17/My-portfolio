@@ -108,6 +108,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Limit foreground video to play only twice, then stop
+    if (fgVideo) {
+        const maxPlays = 2;
+        let playCount = 0;
+
+        // Ensure the video doesn't loop automatically
+        fgVideo.loop = false;
+
+        fgVideo.addEventListener('ended', () => {
+            playCount += 1;
+            if (playCount < maxPlays) {
+                // replay
+                try {
+                    fgVideo.currentTime = 0;
+                    fgVideo.play();
+                    if (bgVideo) {
+                        bgVideo.currentTime = 0;
+                        bgVideo.play();
+                    }
+                } catch (err) {
+                    // ignore playback errors (browser autoplay policies)
+                    console.warn('Could not restart video:', err);
+                }
+            } else {
+                // final stop - ensure UI reflects paused state
+                if (playIcon) playIcon.innerHTML = iconPlay;
+                if (playBtn) playBtn.setAttribute('aria-label', 'Play video');
+            }
+        });
+    }
+
     // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
     
