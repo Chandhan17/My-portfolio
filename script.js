@@ -64,6 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Unmute when clicking on the foreground video
+    if (fgVideo) {
+        fgVideo.addEventListener('click', () => {
+            if (fgVideo.muted) {
+                setMuted(false);
+            }
+        });
+
+        // Support keyboard activation if video is focusable
+        fgVideo.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && fgVideo.muted) {
+                e.preventDefault();
+                setMuted(false);
+            }
+        });
+    }
     // Tap for Sound badge
     if (tapBadge) {
         tapBadge.addEventListener('click', () => setMuted(false));
